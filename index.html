@@ -1,49 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>My Personal Website</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+
+    <style>
+        /* Basic styling for the body to center content and set a background */
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #303031, #757676);
+            color: #444;
+        }
+
+        /* Styling for the input fields */
+        input {
+            margin: 8px 0;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 280px;
+            background-color: #fff;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styling for the buttons */
+        button {
+            margin: 12px 0;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background-color: #23c35b;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background-color: #239f4e;
+            transform: translateY(-2px);
+        }
+
+        /* Result display styling */
+        p {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #e2f0d9;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Container for input fields and buttons */
+        .container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 300px;
+        }
+
+        /* Heading styling */
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-
-  <header>
+    <!-- Container for the Grade Calculator form -->
     <div class="container">
-      <div class="logo-container">
-        <img src="Hero-MC.jpg" alt="Website Logo" class="logo">
-        <h1>My Portfolio</h1>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="index.html" class="active"> Home </a></li>
-          <li><a href="about.html"> About Me </a></li>
-          <li><a href="education.html"> Educational Background </a></li>
-          <li><a href="skills.html"> Skills </a></li>
-          <li><a href="pedbak.html"> Feedback </a></li>
-          <li><a href="projects.html" class="active"> Projects </a></li>
-          <li><a href="gallery.html" class="active"> Photo Gallery </a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+        <h1>Grade Calculator</h1>
 
-  <section id="home">
-    <div class="content">
-      <div class="hero">
-        <h2>Welcome to My Personal Website</h2>
-        <p>Hi, I'm Mckencee Brooke D. Longcob, an aspiring IT student passionate about coding, creativity, and innovation. This is my digital space where I share about me, my educational background, my skills, and my project.</p> 
-        <strong>Here you can:</strong>
-        <a href="about.html" class="btn">Learn More About Me</a>
-      </div>
-    </div>
-  </section>
+        <!-- Input fields for absences and various grades -->
+        <input type="number" id="absences" placeholder="Number of Absences" />
+        <input type="number" id="prelim_exam" placeholder="Prelim Exam Grade (0-100)" />
+        <input type="number" id="quizzes" placeholder="Quizzes Grade (0-100)" />
+        <input type="number" id="requirements" placeholder="Requirements Grade (0-100)" />
+        <input type="number" id="recitation" placeholder="Recitation Grade (0-100)" />
 
-  <footer>
-    <div class="container">
-      <p>&copy; 2024 Mckencee. All rights reserved.</p>
+        <!-- Button to trigger the calculation of grades -->
+        <button id="calculateButton">Calculate Grades</button>
+
+        <!-- Paragraph for displaying the result -->
+        <p id="result"></p>
     </div>
-  </footer>
+
+    <script>
+        // Function to check if a value can be converted to a valid float
+        function isFloat(value) {
+            return !isNaN(value) && value.toString().indexOf('.') !== -1;
+        }
+
+        // Function to check if a value can be converted to a valid integer
+        function isInt(value) {
+            return !isNaN(value) && Number.isInteger(parseFloat(value));
+        }
+
+        // Function to calculate grades when the button is clicked
+        function calculateGrades() {
+            try {
+                // Retrieve input values from the form
+                const absencesStr = document.querySelector("#absences").value;
+                const prelimExamStr = document.querySelector("#prelim_exam").value;
+                const quizzesStr = document.querySelector("#quizzes").value;
+                const requirementsStr = document.querySelector("#requirements").value;
+                const recitationStr = document.querySelector("#recitation").value;
+
+                // Check if any input is empty
+                if (![absencesStr, prelimExamStr, quizzesStr, requirementsStr, recitationStr].every(Boolean)) {
+                    throw new Error("All input fields must be filled.");
+                }
+
+                // Check if all inputs are valid numbers
+                if (!(isInt(absencesStr) && isFloat(prelimExamStr) && isFloat(quizzesStr) && isFloat(requirementsStr) && isFloat(recitationStr))) {
+                    throw new Error("Invalid input. Please enter numbers only.");
+                }
+
+                // Convert inputs to correct types
+                const absences = parseInt(absencesStr);
+                const prelimExam = parseFloat(prelimExamStr);
+                const quizzes = parseFloat(quizzesStr);
+                const requirements = parseFloat(requirementsStr);
+                const recitation = parseFloat(recitationStr);
+
+                // Validate input ranges: Grades must be between 0 and 100, absences must be 0 or more
+                if (absences < 0 || prelimExam < 0 || prelimExam > 100 || quizzes < 0 || quizzes > 100 || requirements < 0 || requirements > 100 || recitation < 0 || recitation > 100) {
+                    throw new Error("Invalid input. Grades must be between 0 and 100.");
+                }
+
+                // Attendance calculation: Start with 100, subtract 10 points per absence
+                // If absences are 4 or more, the student automatically fails
+                if (absences >= 4) {
+                    document.querySelector("#result").innerText = "FAILED: 4 or more absences.";
+                    document.querySelector("#result").style.display = "block";
+                    return;
+                }
+
+                // Calculate the attendance score
+                const attendance = Math.max(0, 100 - absences * 10);
+
+                // Calculate class standing as 40% Quizzes, 30% Requirements, 30% Recitation
+                const classStanding = quizzes * 0.4 + requirements * 0.3 + recitation * 0.3;
+
+                // Prelim grade calculation: 60% Prelim Exam, 10% Attendance, 30% Class Standing
+                const prelimGrade = (prelimExam * 0.6 + attendance * 0.1 + classStanding * 0.3).toFixed(2);
+
+                // Required Midterm and Final grades to pass (75%) and to achieve Dean's List (90%)
+                const targetPassing = ((75 - prelimGrade * 0.2) / 0.8).toFixed(2);
+                const targetDeansList = ((90 - prelimGrade * 0.2) / 0.8).toFixed(2);
+
+                // Display the results: Prelim grade and the required midterm/final grades for passing and Dean's List
+                document.querySelector("#result").innerText = `
+                    Prelim Grade: ${prelimGrade}.
+                    To pass (75%), you need a Midterm/Final grade of ${targetPassing}.
+                    To achieve Dean's list (90%), you need a Midterm/Final of ${targetDeansList}.
+                `;
+
+                // Make the result paragraph visible after calculation
+                document.querySelector("#result").style.display = "block";
+
+            } catch (error) {
+                document.querySelector("#result").innerText = error.message;
+                document.querySelector("#result").style.display = "block";
+            }
+        }
+
+        // Attach event listener to the calculate button to trigger the grade calculation when clicked
+        document.querySelector("#calculateButton").addEventListener("click", calculateGrades);
+    </script>
 </body>
 </html>
